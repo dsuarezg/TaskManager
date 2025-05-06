@@ -5,8 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-
 @Entity
 @Data
 @NoArgsConstructor
@@ -26,7 +24,5 @@ public class UserTask {
     private Task task;
 
     private String comments;
-
-
 
 }
