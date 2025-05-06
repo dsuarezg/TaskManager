@@ -18,11 +18,11 @@ public class UserTask {
     private Long id;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "user_id")
+    @JoinColumn
     private User user;
 
     @OneToOne(optional = false)
-    @JoinColumn(name = "task_id", unique = true)
+    @JoinColumn(unique = true)
     private Task task;
 
     private String comments;
