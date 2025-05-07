@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -47,12 +48,12 @@ public class UserController {
                 .orElseThrow(() -> new UserNotFoundException("User with username " + username + " not found"));
     }
 
-    @PostMapping
+    @PostMapping("/create")
     @Operation(summary = "Create a new user")
     @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "User created successfully"),
             @ApiResponse(responseCode = "403", description = "Forbidden"),
             @ApiResponse(responseCode = "400", description = "Bad Request")})
-    public ResponseEntity<User> createUser(@RequestBody User user) {
+    public ResponseEntity<User> createUser(@RequestBody @Valid User user) {
         User createdUser = userService.saveUser(user);
         return ResponseEntity.status(201).body(createdUser);
     }
