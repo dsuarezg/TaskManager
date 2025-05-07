@@ -14,15 +14,16 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
 
-/*    @Bean // we let Spring know that this method is a bean
+    @Bean // we let Spring know that this method is a bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                // .csrf(AbstractHttpConfigurer::disable)
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/public/**","/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll() // Here we can allow access to certain endpoints without authentication
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll() // Here we can allow access to certain endpoints without authentication
                         .anyRequest().authenticated() // The rest of the endpoints will require authentication
                 )
                 .httpBasic(Customizer.withDefaults()); // this part enables the basic authentication
         return http.build(); // this method returns the SecurityFilterChain object
-    }*/
+
+}
 }
