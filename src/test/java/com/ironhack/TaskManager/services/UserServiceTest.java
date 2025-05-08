@@ -42,16 +42,16 @@ class UserServiceTest {
         userRepository.delete(user);
     }
 
-    @Test
-    @DisplayName("Generate a user")
-    public void testGenerateUser() {
-        User user = new User();
-//        user.setUsername("testUser");
-//        user.setPassword("123456");
-        user.setUsername("Admin");
-        user.setPassword("Admin1234");
-        userService.saveUser(user);
-    }
+//    @Test
+//    @DisplayName("Generate a user")
+//    public void testGenerateUser() {
+//        User user = new User();
+////        user.setUsername("testUser");
+////        user.setPassword("123456");
+//        user.setUsername("Admin");
+//        user.setPassword("Admin1234");
+//        userService.saveUser(user);
+//    }
 
     @Test
     @DisplayName("Encription of password successful")

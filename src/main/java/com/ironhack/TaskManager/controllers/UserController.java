@@ -23,6 +23,14 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
+    @GetMapping("/all")
+    @Operation(summary = "Get all users")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Users retrieved successfully"),
+            @ApiResponse(responseCode = "403", description = "Forbidden")})
+    public ResponseEntity<Iterable<User>> findAll() {
+        return ResponseEntity.ok(userRepository.findAll());
+    }
+
     @GetMapping("/id/{id}")
     @Operation(summary = "Get user by ID")
     @Parameter(name = "id", description = "ID of the user to retrieve")
@@ -54,7 +62,7 @@ public class UserController {
             @ApiResponse(responseCode = "403", description = "Forbidden"),
             @ApiResponse(responseCode = "400", description = "Bad Request")})
     public ResponseEntity<User> createUser(@RequestBody @Valid User user) {
-        User createdUser = userService.saveUser(user);
+        User createdUser = userService.createUser(user);
         return ResponseEntity.status(201).body(createdUser);
     }
 

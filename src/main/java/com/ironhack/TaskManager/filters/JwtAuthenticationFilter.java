@@ -10,70 +10,73 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * JWT Authentication Filter that processes incoming HTTP requests to validate and authenticate JWT tokens.
+ * It ensures that the user is authenticated and sets the security context for the request.
+ */
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
-    private JwtService jwtService;
+    private JwtService jwtService; // Service to handle JWT-related operations.
 
+    /**
+     * Main method of the filter that intercepts each HTTP request.
+     * @param request Incoming HTTP request.
+     * @param response Outgoing HTTP response.
+     * @param filterChain Filter chain to continue processing the request.
+     */
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
 
+        // Retrieve the "Authorization" header from the request.
         final String authHeader = request.getHeader("Authorization");
 
+        // If the header is missing or does not start with "Bearer ", skip further processing.
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        String token = authHeader.substring(7);
+        // Extract the JWT token by removing the "Bearer " prefix.
+        final String token = authHeader.substring(7);
 
-        try {
-            if (!jwtService.verifyToken(token)) {
-                filterChain.doFilter(request, response);
-                return;
-            }
-
-            String username = jwtService.extractUsername(token);
-            String roles = jwtService.extractRoles(token);
-
-            Collection<GrantedAuthority> authorities = extractAuthorities(roles);
-
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username, token, authorities);
-
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        } catch (Exception e) {
-            // Manejo de excepciones (puedes registrar el error o devolver una respuesta personalizada)
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Unauthorized: " + e.getMessage());
+        // Verify the token's validity. If invalid, skip further processing.
+        if (!jwtService.verifyToken(token)) {
+            filterChain.doFilter(request, response);
             return;
         }
 
-        filterChain.doFilter(request, response);
-    }
+        // Extract the username and roles from the token.
+        String username = jwtService.extractUsername(token);
+        List<String> roles = jwtService.extractRoles(token);
 
-    private Collection<GrantedAuthority> extractAuthorities(String roles) {
-
-        if (roles == null || roles.isEmpty()) {
-            return Collections.emptyList();
-        }
-
-        String rolesString = roles.replace("[", "").replace("]", "");
-        String[] rolesArray = rolesString.split(",");
-
-        return Arrays.stream(rolesArray)
-                .map(String::trim)
+        // Convert roles into a list of GrantedAuthority objects for Spring Security.
+        List<GrantedAuthority> authorities = roles.stream()
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
+
+        // Create an authentication token with the username and roles.
+        UsernamePasswordAuthenticationToken authToken =
+                new UsernamePasswordAuthenticationToken(username, null, authorities);
+
+        // Add additional request details to the authentication token.
+        authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+        // Set the authentication token in the security context.
+        SecurityContextHolder.getContext().setAuthentication(authToken);
+
+        // Continue with the next filter in the chain.
+        filterChain.doFilter(request, response);
     }
 }
