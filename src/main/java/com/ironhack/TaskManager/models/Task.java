@@ -11,7 +11,7 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class Task {
+public class Task {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

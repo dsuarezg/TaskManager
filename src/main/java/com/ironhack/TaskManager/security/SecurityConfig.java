@@ -28,8 +28,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // Public routes
                         .requestMatchers("/api/auth/login").permitAll()
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                         // Routes protected by role
                         .requestMatchers("/api/user/create").hasRole("ADMIN")
+                        .requestMatchers("/api/user/all").hasRole("ADMIN")
+                        //Protected by User
+                        .requestMatchers("/api/personal-task/**").authenticated()
                         // All other routes require authentication
                         .anyRequest().authenticated()
                 )
