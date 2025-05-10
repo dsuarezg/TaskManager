@@ -57,18 +57,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        // Extract the username and roles from the token.
+        // Extract the username and role from the token.
         String username = jwtService.extractUsername(token);
-        List<String> roles = jwtService.extractRoles(token);
+        String role = jwtService.extractRole(token);
 
-        // Convert roles into a list of GrantedAuthority objects for Spring Security.
-        List<GrantedAuthority> authorities = roles.stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+        // Convert role into a list of GrantedAuthority objects for Spring Security.
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role);
 
         // Create an authentication token with the username and roles.
         UsernamePasswordAuthenticationToken authToken =
-                new UsernamePasswordAuthenticationToken(username, null, authorities);
+                new UsernamePasswordAuthenticationToken(username, null, List.of(authority));
 
         // Add additional request details to the authentication token.
         authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

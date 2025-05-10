@@ -9,10 +9,10 @@ import java.util.List;
 
 @Repository
 public interface UserTaskRepository extends JpaRepository<UserTask, Long> {
-    List<UserTask> findByUser(User user);
-
-    List<UserTask> findByUserId(Long userId);
 
     List<UserTask> findByUser_Username(String username);
 
+    Boolean existsByTask_IdAndUser_Username(Long taskId, String username);
+
+    void deleteByTaskId(Long taskId);
 }

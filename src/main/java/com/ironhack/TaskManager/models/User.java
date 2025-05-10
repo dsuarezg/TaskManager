@@ -1,15 +1,18 @@
 package com.ironhack.TaskManager.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Entity
@@ -19,28 +22,31 @@ import java.util.stream.Collectors;
 public class User implements UserDetails {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy= GenerationType.IDENTITY) // Automatically generates unique IDs for each user
     private Long id;
 
-    @NotBlank(message = "Username cannot be blank")
+    @NotBlank(message = "Username cannot be blank") // Ensures the username is not blank
+    @Column(unique = true, nullable = false) // Enforces uniqueness and non-null constraint in the database
     String username;
 
-    @NotBlank(message = "Password cannot be blank")
-    @Size(min = 8, message = "Password must be at least 8 characters long")
+    @NotBlank(message = "Password cannot be blank") // Ensures the password is not blank
+    @Size(min = 8, message = "Password must be at least 8 characters long") // Validates minimum password length
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    private Collection<Role> roles = new ArrayList<>();
+    @Enumerated(EnumType.STRING) // Maps the enum to a string in the database
+    private ERole role = ERole.ROLE_USER; // Default role is ROLE_USER
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles.stream()
-                .map(role -> new SimpleGrantedAuthority(role.getName().name()))
-                .collect(Collectors.toList());
+        // Returns a collection of authorities (roles) for the user
+        return List.of(new SimpleGrantedAuthority(role.name())); // Converts the role to a GrantedAuthority
     }
 
-    @Override public boolean isAccountNonExpired() { return true; }
-    @Override public boolean isAccountNonLocked() { return true; }
-    @Override public boolean isCredentialsNonExpired() { return true; }
-    @Override public boolean isEnabled() { return true; }
+    @JsonProperty("authorities") // Exposes the authorities as a JSON property
+    public List<String> getAuthoritiesAsStrings() {
+        // Converts the authorities to a list of strings for easier JSON serialization
+        return getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority) // Maps each authority to its string representation
+                .collect(Collectors.toList());
+    }
 }
