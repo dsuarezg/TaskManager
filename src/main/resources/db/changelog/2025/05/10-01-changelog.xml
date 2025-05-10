@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.31.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1746884428445-1" author="daniel">
+        <createTable tableName="mandatory_task">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_mandatorytask"/>
+            </column>
+            <column name="due_date" type="DATE"/>
+            <column name="priority" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1746884428445-2" author="daniel">
+        <createTable tableName="personal_task">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_personaltask"/>
+            </column>
+            <column name="place" type="VARCHAR(255)"/>
+            <column name="duration" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1746884428445-3" author="daniel">
+        <createTable tableName="task">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_task"/>
+            </column>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="is_finished" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1746884428445-4" author="daniel">
+        <createTable tableName="user">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_user"/>
+            </column>
+            <column name="username" type="VARCHAR(255)"/>
+            <column name="password" type="VARCHAR(255)"/>
+            <column name="role" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1746884428445-5" author="daniel">
+        <createTable tableName="user_task">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_usertask"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="task_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="comments" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1746884428445-6" author="daniel">
+        <addUniqueConstraint columnNames="task_id" constraintName="uc_usertask_task" tableName="user_task"/>
+    </changeSet>
+    <changeSet id="1746884428445-7" author="daniel">
+        <addForeignKeyConstraint baseColumnNames="id" baseTableName="mandatory_task"
+                                 constraintName="FK_MANDATORYTASK_ON_ID" referencedColumnNames="id"
+                                 referencedTableName="task"/>
+    </changeSet>
+    <changeSet id="1746884428445-8" author="daniel">
+        <addForeignKeyConstraint baseColumnNames="id" baseTableName="personal_task"
+                                 constraintName="FK_PERSONALTASK_ON_ID" referencedColumnNames="id"
+                                 referencedTableName="task"/>
+    </changeSet>
+    <changeSet id="1746884428445-9" author="daniel">
+        <addForeignKeyConstraint baseColumnNames="task_id" baseTableName="user_task"
+                                 constraintName="FK_USERTASK_ON_TASK" referencedColumnNames="id"
+                                 referencedTableName="task"/>
+    </changeSet>
+    <changeSet id="1746884428445-10" author="daniel">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_task"
+                                 constraintName="FK_USERTASK_ON_USER" referencedColumnNames="id"
+                                 referencedTableName="user"/>
+    </changeSet>
+
+</databaseChangeLog>

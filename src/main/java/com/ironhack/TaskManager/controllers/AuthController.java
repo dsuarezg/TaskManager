@@ -25,9 +25,11 @@ public class AuthController {
 
     @PostMapping("/login")
     @Operation(summary = "Login user")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Login successful"),
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Login successful"),
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
-            @ApiResponse(responseCode = "404", description = "User not found")})
+            @ApiResponse(responseCode = "404", description = "User not found")
+    })
     public ResponseEntity<?> login(@RequestBody User user) {
         return userService.authenticateUser(user, jwtService);
     }
