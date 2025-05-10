@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -45,12 +46,31 @@ public class UserService implements UserDetailsService {
             User existingUser = optionalUser.get();
             if (passwordIsValid(existingUser, user.getPassword())) {
                 String token = jwtService.generateToken(existingUser);
-                return ResponseEntity.ok(token);
+                return ResponseEntity.ok(Map.of("token", token));
             } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(Map.of("message", "Invalid username or password"));
             }
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("message", "User not found"));
+        }
+    }
+
+    public ResponseEntity<String> authenticateUserNoJSON(User user, JwtService jwtService) {
+        Optional<User> optionalUser = getByUsername(user.getUsername());
+        if (optionalUser.isPresent()) {
+            User existingUser = optionalUser.get();
+            if (passwordIsValid(existingUser, user.getPassword())) {
+                String token = jwtService.generateToken(existingUser);
+                return ResponseEntity.ok(token);
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body("Invalid username or password");
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("User not found");
         }
     }
 

@@ -3,18 +3,20 @@ package com.ironhack.TaskManager.services;
 import com.ironhack.TaskManager.models.ERole;
 import com.ironhack.TaskManager.models.User;
 import com.ironhack.TaskManager.repositories.UserRepository;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.junit.jupiter.api.Assertions.*;
-@SpringBootTest
-class UserServiceTest {
 
-    private User user;
+@SpringBootTest
+@Transactional
+class UserServiceTest {
 
     @Autowired
     private UserService userService;
@@ -22,76 +24,49 @@ class UserServiceTest {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    private User user;
+
     @BeforeEach
     void setUp() {
+        userRepository.deleteAll();
+
         user = new User();
         user.setUsername("UserTest");
         user.setPassword("Test1234");
         user.setRole(ERole.ROLE_USER);
-        System.out.println("User created: " + user);
 
         userService.createUser(user);
     }
 
     @AfterEach
     void tearDown() {
-        //userRepository.deleteAll();
-        //userRepository.delete(user);
+        userRepository.deleteAll();
     }
 
     @Test
-    @DisplayName("Generate a user")
-    public void testGenerateUser() {
-        User user = new User();
-        user.setUsername("User");
-        user.setPassword("User1234");
-        user.setRole(ERole.ROLE_USER);
-
-        userService.createUser(user);
+    @DisplayName("Contraseña encriptada correctamente")
+    public void testPasswordEncryption() {
+        User savedUser = userRepository.findByUsername("UserTest").orElse(null);
+        assertNotNull(savedUser);
+        assertTrue(passwordEncoder.matches("Test1234", savedUser.getPassword()));
     }
 
     @Test
-    @DisplayName("Encription of password successful")
-    public void testEncriptionOfPasswordSuccessful() {
-        assertTrue(user.getPassword().startsWith("$2a$"));// BCrypt password starts with $2a$
-        System.out.println("Password encrypted: " + user.getPassword());
+    @DisplayName("Validación de contraseña exitosa")
+    public void testPasswordValidationSuccess() {
+        User savedUser = userRepository.findByUsername("UserTest").orElse(null);
+        assertNotNull(savedUser);
+        assertTrue(userService.passwordIsValid(savedUser, "Test1234"));
     }
 
     @Test
-    @DisplayName("User role is assigned correctly")
-    public void testUserRoleIsAssignedCorrectly() {
-        user.setUsername("User");
-        user.setPassword("User1234");
-        user.setRole(ERole.ROLE_USER);
-        assertNotNull(user, "User not found");
-        assertNotNull(user.getRole(), "Role is null");
-        assertEquals(ERole.ROLE_USER, user.getRole(), "Role is not assigned correctly");
+    @DisplayName("Validación de contraseña fallida")
+    public void testPasswordValidationFailure() {
+        User savedUser = userRepository.findByUsername("UserTest").orElse(null);
+        assertNotNull(savedUser);
+        assertFalse(userService.passwordIsValid(savedUser, "WrongPassword"));
     }
-
-    @Test
-    @DisplayName("Admin role is assigned correctly")
-    public void testAdminRoleIsAssignedCorrectly() {
-        user.setUsername("Admin");
-        user.setPassword("Admin1234");
-        user.setRole(ERole.ROLE_ADMIN);
-        userService.createUser(user);
-        assertNotNull(user, "User not found");
-        assertNotNull(user.getRole(), "Role is null");
-        assertEquals(ERole.ROLE_ADMIN, user.getRole(), "Role is not assigned correctly");
-    }
-
-    @Test
-    @DisplayName("Manager role is assigned correctly")
-    public void testManagerRoleIsAssignedCorrectly() {
-        user.setUsername("Manager");
-        user.setPassword("Manager1234");
-        user.setRole(ERole.ROLE_MANAGER);
-        userService.createUser(user);
-        assertNotNull(user, "User not found");
-        assertNotNull(user.getRole(), "Role is null");
-        assertEquals(ERole.ROLE_MANAGER, user.getRole(), "Role is not assigned correctly");
-    }
-
-
-
 }

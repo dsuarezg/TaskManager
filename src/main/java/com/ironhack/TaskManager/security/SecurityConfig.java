@@ -30,8 +30,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/login").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                         // Routes protected by role
-                        .requestMatchers("/api/user/create").hasRole("ADMIN")
-                        .requestMatchers("/api/user/all").hasRole("ADMIN")
+                        .requestMatchers("/api/user/**").hasRole("ADMIN")
+                        //.requestMatchers("/api/task/**").hasRole("ADMIN")
                         //Protected by User
                         .requestMatchers("/api/task/**").authenticated()
                         // All other routes require authentication

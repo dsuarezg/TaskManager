@@ -20,6 +20,6 @@ public class Task {
     @NotBlank(message = "Description cannot be blank")
     private String description;
 
-    private boolean isFinished;
+    private boolean isFinished = false;
 
 }
