@@ -33,9 +33,7 @@ public class JwtService {
 
         return JWT.create()
                 .withSubject(user.getUsername()) // Adds the username as the subject of the token.
-                .withClaim("roles", user.getRoles().stream() // Adds the user's roles as a claim.
-                        .map(role -> role.getName().name())
-                        .collect(Collectors.toList()))
+                .withClaim("role", user.getRole().name()) // Adds the user's role as a claim.
                 .withIssuedAt(new Date()) // Sets the issue date of the token.
                 .withExpiresAt(Date.from(Instant.now().plus(1, ChronoUnit.DAYS))) // Sets the expiration date (1 day from now).
                 .sign(algorithm); // Signs the token with the specified algorithm.
@@ -74,7 +72,7 @@ public class JwtService {
      * @param token The JWT token from which to extract the roles.
      * @return A list of roles as Strings.
      */
-    public List<String> extractRoles(String token) {
-        return JWT.decode(token).getClaim("roles").asList(String.class); // Decodes the token and retrieves the roles claim.
+    public String extractRole(String token) {
+        return JWT.decode(token).getClaim("role").asString(); // Decodes the token and retrieves the roles claim.
     }
 }

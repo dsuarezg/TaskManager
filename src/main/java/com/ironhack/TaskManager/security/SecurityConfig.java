@@ -33,7 +33,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/user/create").hasRole("ADMIN")
                         .requestMatchers("/api/user/all").hasRole("ADMIN")
                         //Protected by User
-                        .requestMatchers("/api/personal-task/**").authenticated()
+                        .requestMatchers("/api/task/**").authenticated()
                         // All other routes require authentication
                         .anyRequest().authenticated()
                 )

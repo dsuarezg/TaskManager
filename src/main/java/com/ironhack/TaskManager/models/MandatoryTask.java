@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProfessionalTask extends Task{
+public class MandatoryTask extends Task{
 
     @Future
     private LocalDate dueDate;

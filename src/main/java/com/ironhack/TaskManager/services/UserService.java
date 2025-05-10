@@ -6,13 +6,16 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
@@ -49,5 +52,19 @@ public class UserService {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
+    }
+
+    /**
+     * Loads a user by their username.
+     * This method is used by Spring Security during the authentication process.
+     *
+     * @param username The username of the user to load.
+     * @return A UserDetails object containing the user's information.
+     * @throws UsernameNotFoundException If the user is not found in the database.
+     */
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepository.findByUsername(username) // Searches for the user in the database by username.
+                .orElseThrow(() -> new UsernameNotFoundException("User not found")); // Throws an exception if the user is not found.
     }
 }
