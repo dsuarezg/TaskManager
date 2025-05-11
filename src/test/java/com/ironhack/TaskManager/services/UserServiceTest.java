@@ -49,24 +49,21 @@ class UserServiceTest {
     @Test
     @DisplayName("Contraseña encriptada correctamente")
     public void testPasswordEncryption() {
-        User savedUser = userRepository.findByUsername("UserTest").orElse(null);
-        assertNotNull(savedUser);
-        assertTrue(passwordEncoder.matches("Test1234", savedUser.getPassword()));
+        assertNotNull(user);
+        assertTrue(passwordEncoder.matches("Test1234", user.getPassword()));
     }
 
     @Test
     @DisplayName("Validación de contraseña exitosa")
     public void testPasswordValidationSuccess() {
-        User savedUser = userRepository.findByUsername("UserTest").orElse(null);
-        assertNotNull(savedUser);
-        assertTrue(userService.passwordIsValid(savedUser, "Test1234"));
+        assertNotNull(user);
+        assertTrue(userService.passwordIsValid(user, "Test1234"));
     }
 
     @Test
     @DisplayName("Validación de contraseña fallida")
     public void testPasswordValidationFailure() {
-        User savedUser = userRepository.findByUsername("UserTest").orElse(null);
-        assertNotNull(savedUser);
-        assertFalse(userService.passwordIsValid(savedUser, "WrongPassword"));
+        assertNotNull(user);
+        assertFalse(userService.passwordIsValid(user, "WrongPassword"));
     }
 }

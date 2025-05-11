@@ -25,18 +25,41 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable) // For development. In production, configure appropriately
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Server doesn't store session state, because it's a REST API
-                .authorizeHttpRequests(auth -> auth
+                /*.authorizeHttpRequests(auth -> auth
                         // Public routes
                         .requestMatchers("/api/auth/login").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                         // Routes protected by role
                         .requestMatchers("/api/user/**").hasRole("ADMIN")
-                        //.requestMatchers("/api/task/**").hasRole("ADMIN")
+                        //.requestMatchers("/api/task/**").hasAnyRole("ADMIN")
                         //Protected by User
-                        .requestMatchers("/api/task/**").authenticated()
+                        //.requestMatchers("/api/task/**").authenticated()
+                        .requestMatchers("/api/task/mandatory/**").hasAnyRole("ADMIN", "MANAGER")
+                        .requestMatchers("/api/task/personal/**").hasAnyRole("ADMIN", "USER")
                         // All other routes require authentication
                         .anyRequest().authenticated()
+                )*/
+                .authorizeHttpRequests(auth -> auth
+                                .requestMatchers("/api/auth/login").permitAll()
+                                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+
+// Solo ADMIN puede gestionar usuarios
+                                .requestMatchers("/api/user/**").hasRole("ADMIN")
+
+// Personal Tasks
+                                .requestMatchers("/api/task/personal/**").hasAnyRole("ADMIN", "USER")
+
+// Mandatory Tasks
+                                .requestMatchers("/api/task/mandatory/**").hasAnyRole("ADMIN", "USER", "MANAGER")
+
+// Tareas generales (/task/** para completar/borrar tareas)
+                                .requestMatchers("/api/task/**").hasAnyRole("ADMIN", "USER")
+
+// Cualquier otra request
+                                .anyRequest().authenticated()
+
                 )
+
                 // Add our filter before UsernamePasswordAuthenticationFilter
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 

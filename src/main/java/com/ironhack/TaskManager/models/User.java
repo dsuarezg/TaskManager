@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 public class User implements UserDetails {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY) // Automatically generates unique IDs for each user
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Automatically generates unique IDs for each user
     private Long id;
 
     @NotBlank(message = "Username cannot be blank") // Ensures the username is not blank
@@ -41,6 +41,28 @@ public class User implements UserDetails {
         // Returns a collection of authorities (roles) for the user
         return List.of(new SimpleGrantedAuthority(role.name())); // Converts the role to a GrantedAuthority
     }
+
+    /// Additional methods required by UserDetails interface
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+
+    } // Indicates that the account is not expired
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }  // Indicates that the account is not locked
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }  // Indicates that the credentials are not expired
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }  // Indicates that the account is enabled
 
     @JsonProperty("authorities") // Exposes the authorities as a JSON property
     public List<String> getAuthoritiesAsStrings() {
