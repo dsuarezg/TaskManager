@@ -23,5 +23,5 @@ public class UserTask {
     @JoinColumn(unique = true) // Specifies the foreign key column and enforces uniqueness
     private Task task;
 
-    private String comments; // Stores additional comments related to the UserTask
+    private String taskType; // Stores additional comments related to the UserTask
 }

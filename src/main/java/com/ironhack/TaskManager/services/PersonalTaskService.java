@@ -52,7 +52,7 @@ public class PersonalTaskService extends TaskService {
         UserTask userTask = new UserTask();
         userTask.setUser(user); // Sets the user
         userTask.setTask(savedTask); // Sets the task
-        userTask.setComments(task.getDescription()); // Adds comments from the task description
+        userTask.setTaskType(task.getClass().getSimpleName()); // Adds task type
 
         // Saves and returns the UserTask object
         return userTaskRepository.save(userTask);
@@ -69,19 +69,20 @@ public class PersonalTaskService extends TaskService {
         List<UserTask> userTasks = userTaskRepository.findByUser_Username(username);
 
         // Maps the UserTask objects to PersonalTask objects, filters out null values, and collects them into a list
-        return userTasks.stream()
-                .map(userTask -> (PersonalTask) userTask.getTask()) // Casts the task to PersonalTask
-                .filter(Objects::nonNull) // Filters out null tasks
+        return userTasks.stream() // Maps the UserTask objects to Task objects
+                .map(UserTask::getTask)  //
+                .filter(task -> task instanceof PersonalTask) // Filters out non-PersonalTask objects
+                .map(task -> (PersonalTask) task) // Casts the Task objects to PersonalTask
                 .collect(Collectors.toList()); // Collects the tasks into a list
     }
 
-    public void validateTaskOwnership(Long taskId, String username) {
-        // Verifica si existe una relación entre el usuario y la tarea en UserTask
-        boolean exists = userTaskRepository.existsByTask_IdAndUser_Username(taskId, username);
-        if (!exists) {
-            throw new IllegalArgumentException ("You are not authorized to access this task.");
-        }
-    }
+//    public void validateTaskOwnership(Long taskId, String username) {
+//        // Verifica si existe una relación entre el usuario y la tarea en UserTask
+//        boolean exists = userTaskRepository.existsByTask_IdAndUser_Username(taskId, username);
+//        if (!exists) {
+//            throw new IllegalArgumentException ("You are not authorized to access this task.");
+//        }
+//    }
 
     public List<PersonalTask> getAllPersonalTask() {
         return personalTaskRepository.findAll();

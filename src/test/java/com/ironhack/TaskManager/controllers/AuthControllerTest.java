@@ -280,6 +280,7 @@ public class AuthControllerTest {
         // Intentar leer la tarea creada por el primer usuario
         mockMvc.perform(get("/api/task/personal/list")
                         .header("Authorization", secondUserToken))
-                .andExpect(status().isForbidden()); // Esperar un error 403 Forbidden
+                .andExpect(status().isOk()) // Esperar un estado 200 OK
+                .andExpect(jsonPath("$").isEmpty()); // Verificar que la lista esté vacía
     }
 }
