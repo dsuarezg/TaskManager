@@ -23,6 +23,7 @@ public class AuthController {
     @Autowired
     private JwtService jwtService;
 
+    // Endpoint for user login
     @PostMapping("/login")
     @Operation(summary = "Login user")
     @ApiResponses(value = {
@@ -35,4 +36,3 @@ public class AuthController {
     }
 
 }
-

@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-class UserTaskServiceTest {
+class UserTaskRepositoryTest {
 
     @Autowired
     private UserRepository userRepository;
@@ -36,7 +36,6 @@ class UserTaskServiceTest {
         user = userRepository.save(user);
 
         PersonalTask task = new PersonalTask();
-        task.setDescription("Test Task");
         task.setDescription("Test Task");
         task.setDuration(50);
         task.setPlace("The Office");
