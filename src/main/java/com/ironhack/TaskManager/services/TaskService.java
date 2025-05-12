@@ -42,5 +42,13 @@ public class TaskService {
         taskRepository.delete(task);
     }
 
+    public void validateTaskOwnership(Long taskId, String username) {
+        // Verifica si existe una relación entre el usuario y la tarea en UserTask
+        boolean exists = userTaskRepository.existsByTask_IdAndUser_Username(taskId, username);
+        if (!exists) {
+            throw new IllegalArgumentException ("You are not authorized to access this task.");
+        }
+    }
+
 
     }
