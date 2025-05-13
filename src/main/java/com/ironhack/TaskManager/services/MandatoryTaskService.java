@@ -2,7 +2,6 @@ package com.ironhack.TaskManager.services;
 
 import com.ironhack.TaskManager.exceptions.UserNotFoundException;
 import com.ironhack.TaskManager.models.MandatoryTask;
-import com.ironhack.TaskManager.models.PersonalTask;
 import com.ironhack.TaskManager.models.User;
 import com.ironhack.TaskManager.models.UserTask;
 import com.ironhack.TaskManager.repositories.MandatoryTaskRepository;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,7 +32,7 @@ public class MandatoryTaskService extends TaskService {
     /**
      * Creates a new mandatory task for a specific user.
      *
-     * @param task The mandatory task to be created.
+     * @param task     The mandatory task to be created.
      * @param username The username of the user to whom the task will be assigned.
      * @return The UserTask object that links the user and the task.
      */
@@ -80,18 +78,10 @@ public class MandatoryTaskService extends TaskService {
                 .collect(Collectors.toList()); // Collects the tasks into a list
     }
 
-//    public void validateTaskOwnership(Long taskId, String username) {
-//        // Verifica si existe una relación entre el usuario y la tarea en UserTask
-//        boolean exists = userTaskRepository.existsByTask_IdAndUser_Username(taskId, username);
-//        if (!exists) {
-//            throw new IllegalArgumentException ("You are not authorized to access this task.");
-//        }
-//    }
 
     public List<MandatoryTask> getAllMandatoryTasks() {
         return mandatoryTaskRepository.findAll();
     }
-
 
 
 }
