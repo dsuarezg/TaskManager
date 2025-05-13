@@ -29,9 +29,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private JwtService jwtService; // Service to handle JWT-related operations.
 
     /**
-     * Main method of the filter that intercepts each HTTP request.
-     * @param request Incoming HTTP request.
-     * @param response Outgoing HTTP response.
+     * Processes incoming HTTP requests to authenticate users based on JWT tokens.
+     *
+     * If a valid JWT is present in the "Authorization" header, sets the authentication in the Spring Security context; otherwise, continues the filter chain without authentication.
+     *
+     * @param request the incoming HTTP request
+     * @param response the outgoing HTTP response
+     * @throws ServletException if an error occurs during filtering
+     * @throws IOException if an I/O error occurs during filtering
      */
     @Override
     protected void doFilterInternal(HttpServletRequest request,
