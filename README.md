@@ -119,6 +119,7 @@ Relaciones:
    ```
    http://localhost:8080/swagger-ui/index.html
    ```
+![img.png](src/main/resources/static/swagger.png)
 
 ---
 
