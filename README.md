@@ -19,7 +19,7 @@ Los usuarios pueden:
 
 
 <div style="text-align: center;">
-  <img src="src/main/resources/static/img.png" alt="Diagrama de clases">
+  <img src="src/main/resources/static/uml.png" alt="Diagrama de clases">
 </div>
 
 
