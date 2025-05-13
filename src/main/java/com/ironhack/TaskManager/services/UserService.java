@@ -24,14 +24,22 @@ public class UserService implements UserDetailsService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    /**
+     * Creates a new user with an encoded password and saves it to the repository.
+     *
+     * @param user the user to create; must have a raw (unencrypted) password
+     * @return the saved user with the encoded password
+     */
     public User createUser(@Valid User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
+
     public boolean passwordIsValid(User user, String password) {
         return passwordEncoder.matches(password, user.getPassword());
     }
+
 
     public Optional<User> getByUsername(String username) {
         if(username == null || username.isEmpty()) {

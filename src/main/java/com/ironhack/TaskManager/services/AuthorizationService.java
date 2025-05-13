@@ -12,6 +12,7 @@ public class AuthorizationService {
     @Autowired
     private MandatoryTaskService mandatoryTaskService;
 
+
     public boolean hasRole(Authentication auth, String role) {
         return auth.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals(role));
     }

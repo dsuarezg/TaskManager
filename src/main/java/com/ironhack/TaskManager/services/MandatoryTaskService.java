@@ -32,7 +32,7 @@ public class MandatoryTaskService extends TaskService {
     private MandatoryTaskRepository mandatoryTaskRepository;
 
     /**
-     * Creates a new mandatory task for a specific user.
+     * Creates and assigns a new mandatory task to a user, linking them via a UserTask entity.
      *
      * @param task The mandatory task to be created.
      * @param username The username of the user to whom the task will be assigned.
@@ -87,6 +87,7 @@ public class MandatoryTaskService extends TaskService {
 //            throw new IllegalArgumentException ("You are not authorized to access this task.");
 //        }
 //    }
+
 
     public List<MandatoryTask> getAllMandatoryTasks() {
         return mandatoryTaskRepository.findAll();

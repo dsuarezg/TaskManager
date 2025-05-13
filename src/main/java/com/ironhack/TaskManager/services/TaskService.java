@@ -26,6 +26,12 @@ public class TaskService {
         return userTaskRepository.existsByTask_IdAndUser_Username(taskId, username);
     }
 
+    /**
+     * Marks the specified task as completed.
+     *
+     * @param taskId the ID of the task to complete
+     * @throws TaskNotFoundException if the task with the given ID does not exist
+     */
     public void completeTask(Long taskId) {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new TaskNotFoundException("Task not found"));
@@ -33,6 +39,7 @@ public class TaskService {
         task.setFinished(true);
         taskRepository.save(task);
     }
+
 
     @Transactional
     public void deleteTask(Long taskId) {

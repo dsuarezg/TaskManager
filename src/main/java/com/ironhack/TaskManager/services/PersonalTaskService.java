@@ -33,7 +33,7 @@ public class PersonalTaskService extends TaskService {
     private PersonalTaskRepository personalTaskRepository;
 
     /**
-     * Creates a new personal task for a specific user.
+     * Creates and assigns a new personal task to a user.
      *
      * @param task The personal task to be created.
      * @param username The username of the user to whom the task will be assigned.
@@ -84,6 +84,7 @@ public class PersonalTaskService extends TaskService {
 //        }
 //    }
 
+
     public List<PersonalTask> getAllPersonalTask() {
         return personalTaskRepository.findAll();
     }
@@ -98,6 +99,7 @@ public class PersonalTaskService extends TaskService {
 //        task.setFinished(true);
 //        personalTaskRepository.save(task);
 //    }
+
 
     public void completeTask(Long taskId, boolean finished) {
         PersonalTask task = personalTaskRepository.findById(taskId)

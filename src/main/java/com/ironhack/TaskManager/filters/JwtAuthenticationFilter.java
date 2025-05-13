@@ -32,7 +32,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
      * Main method of the filter that intercepts each HTTP request.
      * @param request Incoming HTTP request.
      * @param response Outgoing HTTP response.
-     * @param filterChain Filter chain to continue processing the request.
      */
     @Override
     protected void doFilterInternal(HttpServletRequest request,
