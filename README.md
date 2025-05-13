@@ -144,29 +144,52 @@ Relaciones:
 
 ## Controladores y estructura de rutas
 
-| Controlador | Endpoints principales |
-|:---|:---|
-| `AuthController` | `POST /api/auth/login` |
-| `UserController` | `GET /api/user/all` (solo ADMIN) |
-| `TaskController` | `POST /api/task/personal/create`, `GET /api/task/personal/list`, `POST /api/task/mandatory/create`, `GET /api/task/mandatory/list`, `PATCH /api/task/complete/{id}`, `DELETE /api/task/delete/{id}` |
+| Controlador | Endpoints principales                                                                                                                                                                                |
+|:---|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `AuthController` | `POST` /api/auth/login`                                                                                                                                                                               |
+| `UserController` | `GET/POST` `/api/user/` (solo ADMIN)                                                                                                                                                                   |
+| `TaskController` | `GET/POST/PATCH` `/api/task/personal/`, `/api/task/mandatory/` |
 
 **Notas de permisos:**
 - `ADMIN` puede gestionar usuarios y todas las tareas.
 - `MANAGER` puede visualizar, cerrar y eliminar tareas obligatorias.
 - `USER` puede gestionar sus propias tareas personales y obligatorias.
 
+## Decisiones técnicas
+
+- **Spring Security**: Se utiliza para gestionar la autenticación y autorización de los usuarios con un enfoque híbrido, entre el filtrado por roles y usuario.
+- Un usuario solo puede terne un rol, ya que incluyen permisos inferiores o complementarios (en el caso de `MANAGER`).
+- Un usuario solo puede ver sus propias tareas, a menos que sea un `ADMIN` o `MANAGER`, en cuyo caso puede ver todas las tareas obligatorias.
+- Uso responsable de `@Transactional` para evitar problemas de concurrencia y mantener la integridad de los datos.
+- Uso de `@JsonIgnore` para evitar la serialización de campos innecesarios en las respuestas JSON.
+- Uso de `@PreAuthorize` para proteger los endpoints y asegurar que solo los usuarios con los roles adecuados puedan acceder a ellos.
+- Integración de herramientas de IA durante el proceso de desarrollo para mejorar la eficiencia del flujo de trabajo, guiando SIEMPRE al modelo y no al revés (generación de comentarios, consistencia de nomenclatura, consultas puntuales, generación de tests basados en modelos especificado, etc., pero no como desarrolladoras de código).
+
+---
+
+## Por hacer
+
+- [ ] Implementar el resto de los endpoints de `UserController`.
+- [ ] Implementar un sistema de roles y permisos más robusto.
+- [ ] Añadir validaciones y restricciones a los campos de las tareas.
+- [ ] Mejorar la gestión de errores y excepciones.
+- [ ] Implementar pruebas unitarias y de integración más exhaustivas.
+- [ ] Aumentar las funcionalidades de `Tasks` con más atributos y métodos.
+- [ ] Implementar un sistema de notificaciones para tareas.
+- [ ] Incluir un frontend para la gestión de tareas.
 
 ---
 
 ## Extra Links
 
 - [Planificación ClickUp](https://sharing.clickup.com/90151157132/b/h/6-901511003926-2/cf885b5586b2831)
-- [Presentación de Slides](//TODO) 
+- [Presentación de Canva](https://www.canva.com/design/DAGnV4hOAYU/NOSQ0OUVCh5qB_mwHLxK2A/edit?utm_content=DAGnV4hOAYU&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton) 
 - [Colección de tests en Postman](https://documenter.getpostman.com/view/20702470/2sB2jAbThU) 
 
 
 ---
 
 ### Desarrollado por Daniel Suárez
+
 
 ![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/dsuarezg/TaskManager?utm_source=oss&utm_medium=github&utm_campaign=dsuarezg%2FTaskManager&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)
