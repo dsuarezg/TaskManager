@@ -29,12 +29,6 @@ public class TaskService {
         taskRepository.save(task);
     }
 
-    /**
-     * Deletes a task and all associated user-task relationships by task ID.
-     *
-     * @param taskId the ID of the task to delete
-     * @throws TaskNotFoundException if the task with the specified ID does not exist
-     */
     @Transactional
     public void deleteTask(Long taskId) {
         Task task = taskRepository.findById(taskId)
