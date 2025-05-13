@@ -24,24 +24,30 @@ public class UserService implements UserDetailsService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    /**
+     * Creates a new user with an encoded password and saves it to the repository.
+     *
+     * @param user the user to create; must have a raw (unencrypted) password
+     * @return the saved user with the encoded password
+     */
     public User createUser(@Valid User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
     /**
-     * Verifies whether the provided raw password matches the encoded password of the given user.
+     * Checks if the provided raw password matches the encoded password of the specified user.
      *
-     * @param user the user whose password is being validated
-     * @param password the raw password to check
-     * @return true if the password matches; false otherwise
+     * @param user the user whose password is being checked
+     * @param password the raw password to validate
+     * @return true if the raw password matches the user's encoded password; false otherwise
      */
     public boolean passwordIsValid(User user, String password) {
         return passwordEncoder.matches(password, user.getPassword());
     }
 
     /**
-     * Retrieves a user by username.
+     * Retrieves a user by their username.
      *
      * @param username the username to search for; must not be null or empty
      * @return an Optional containing the user if found, or empty if not found

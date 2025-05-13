@@ -30,11 +30,15 @@ public class PersonalTaskService extends TaskService {
     private PersonalTaskRepository personalTaskRepository;
 
     /**
-     * Creates a new personal task for a specific user.
+     * Creates and assigns a new personal task to a user.
      *
-     * @param task     The personal task to be created.
-     * @param username The username of the user to whom the task will be assigned.
-     * @return The UserTask object that links the user and the task.
+     * Associates the provided personal task with the user identified by the given username,
+     * persists both the task and the user-task relationship, and returns the resulting UserTask.
+     *
+     * @param task the personal task to assign
+     * @param username the username of the user to assign the task to
+     * @return the UserTask entity linking the user and the new personal task
+     * @throws UserNotFoundException if the specified user does not exist
      */
     public UserTask createPersonalTask(PersonalTask task, String username) {
 
@@ -56,10 +60,10 @@ public class PersonalTaskService extends TaskService {
     }
 
     /**
-     * Returns all personal tasks associated with the specified username.
+     * Retrieves all personal tasks assigned to the specified user.
      *
      * @param username the username whose personal tasks are to be retrieved
-     * @return a list of personal tasks assigned to the user
+     * @return a list of PersonalTask entities associated with the user
      */
     public List<PersonalTask> getPersonalTasksByUsername(String username) {
         // Finds all UserTask objects associated with the given username
@@ -75,7 +79,7 @@ public class PersonalTaskService extends TaskService {
 
 
     /**
-     * Retrieves all personal tasks from the repository.
+     * Returns a list of all personal tasks stored in the repository.
      *
      * @return a list of all PersonalTask entities
      */
@@ -85,11 +89,11 @@ public class PersonalTaskService extends TaskService {
 
 
     /**
-     * Updates the completion status of a personal task by its ID.
+     * Sets the finished status of a personal task identified by its ID.
      *
-     * @param taskId   the ID of the personal task to update
-     * @param finished true to mark the task as finished, false otherwise
-     * @throws TaskNotFoundException if no personal task with the given ID exists
+     * @param taskId the ID of the personal task to update
+     * @param finished true to mark the task as finished, false to mark as unfinished
+     * @throws TaskNotFoundException if no personal task with the specified ID exists
      */
     public void completeTask(Long taskId, boolean finished) {
         PersonalTask task = personalTaskRepository.findById(taskId)

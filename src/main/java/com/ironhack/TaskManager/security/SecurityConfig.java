@@ -21,7 +21,9 @@ public class SecurityConfig {
     private JwtAuthenticationFilter jwtAuthFilter;
 
     /**
-     * Configures the application's HTTP security settings, including CSRF protection, session management, authorization rules, and JWT authentication filtering.
+     * Builds and configures the application's HTTP security filter chain.
+     *
+     * Sets up stateless session management, disables CSRF protection, defines endpoint-specific authorization rules, and integrates JWT authentication filtering.
      *
      * @param http the {@link HttpSecurity} to configure
      * @return the configured {@link SecurityFilterChain}
