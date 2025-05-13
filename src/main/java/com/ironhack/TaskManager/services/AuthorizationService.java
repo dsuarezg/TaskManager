@@ -13,6 +13,13 @@ public class AuthorizationService {
     private MandatoryTaskService mandatoryTaskService;
 
 
+    /**
+     * Checks if the authenticated user possesses the specified role.
+     *
+     * @param auth the authentication object representing the current user
+     * @param role the role to check for (e.g., "ROLE_ADMIN")
+     * @return true if the user has the specified role; false otherwise
+     */
     public boolean hasRole(Authentication auth, String role) {
         return auth.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals(role));
     }

@@ -22,15 +22,22 @@ public class TaskService {
     @Autowired
     private UserTaskRepository userTaskRepository;
 
+    /**
+     * Checks if a user-task association exists for the specified task ID and username.
+     *
+     * @param taskId   the ID of the task
+     * @param username the username to check association with the task
+     * @return {@code true} if the association exists, {@code false} otherwise
+     */
     public Boolean verifyByTaskIdAndUsername(Long taskId, String username) {
         return userTaskRepository.existsByTask_IdAndUser_Username(taskId, username);
     }
 
     /**
-     * Marks the specified task as completed.
+     * Marks a task as finished by its ID.
      *
-     * @param taskId the ID of the task to complete
-     * @throws TaskNotFoundException if the task with the given ID does not exist
+     * @param taskId the ID of the task to mark as completed
+     * @throws TaskNotFoundException if no task with the specified ID exists
      */
     public void completeTask(Long taskId) {
         Task task = taskRepository.findById(taskId)
@@ -41,6 +48,12 @@ public class TaskService {
     }
 
 
+    /**
+     * Deletes a task and all associated user-task relationships by task ID.
+     *
+     * @param taskId the ID of the task to delete
+     * @throws TaskNotFoundException if the task with the specified ID does not exist
+     */
     @Transactional
     public void deleteTask(Long taskId) {
         Task task = taskRepository.findById(taskId)

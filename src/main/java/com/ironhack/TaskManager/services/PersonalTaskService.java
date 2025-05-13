@@ -82,7 +82,11 @@ public class PersonalTaskService extends TaskService {
 //        if (!exists) {
 //            throw new IllegalArgumentException ("You are not authorized to access this task.");
 //        }
-//    }
+/**
+     * Retrieves all personal tasks from the database.
+     *
+     * @return a list of all PersonalTask entities
+     */
 
 
     public List<PersonalTask> getAllPersonalTask() {
@@ -98,7 +102,13 @@ public class PersonalTaskService extends TaskService {
 //        }
 //        task.setFinished(true);
 //        personalTaskRepository.save(task);
-//    }
+/**
+     * Updates the completion status of a personal task by its ID.
+     *
+     * @param taskId   the ID of the personal task to update
+     * @param finished the new completion status to set
+     * @throws TaskNotFoundException if no personal task with the given ID exists
+     */
 
 
     public void completeTask(Long taskId, boolean finished) {

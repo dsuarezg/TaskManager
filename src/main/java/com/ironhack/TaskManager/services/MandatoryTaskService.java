@@ -86,7 +86,11 @@ public class MandatoryTaskService extends TaskService {
 //        if (!exists) {
 //            throw new IllegalArgumentException ("You are not authorized to access this task.");
 //        }
-//    }
+/**
+     * Retrieves all mandatory tasks from the database.
+     *
+     * @return a list of all MandatoryTask entities
+     */
 
 
     public List<MandatoryTask> getAllMandatoryTasks() {
