@@ -29,12 +29,13 @@ public class MandatoryTaskService extends TaskService {
     @Autowired
     private MandatoryTaskRepository mandatoryTaskRepository;
 
-    /**
-     * Creates a new mandatory task for a specific user.
+    /****
+     * Creates and assigns a new mandatory task to a user, linking them via a UserTask entity.
      *
-     * @param task     The mandatory task to be created.
-     * @param username The username of the user to whom the task will be assigned.
-     * @return The UserTask object that links the user and the task.
+     * @param task the mandatory task to create and assign
+     * @param username the username of the user to assign the task to
+     * @return the UserTask entity linking the user and the created mandatory task
+     * @throws UserNotFoundException if no user with the specified username exists
      */
     public UserTask createMandatoryTask(MandatoryTask task, String username) {
 
@@ -61,10 +62,10 @@ public class MandatoryTaskService extends TaskService {
     }
 
     /**
-     * Retrieves all mandatory tasks assigned to a specific user.
+     * Retrieves all mandatory tasks assigned to the specified user.
      *
-     * @param username The username of the user whose tasks are to be retrieved.
-     * @return A list of MandatoryTask objects assigned to the user.
+     * @param username the username whose mandatory tasks are to be retrieved
+     * @return a list of MandatoryTask objects assigned to the user
      */
     public List<MandatoryTask> getMandatoryTasksByUsername(String username) {
         // Finds all UserTask objects associated with the given username
@@ -79,6 +80,11 @@ public class MandatoryTaskService extends TaskService {
     }
 
 
+    /**
+     * Retrieves all mandatory tasks from the repository.
+     *
+     * @return a list of all MandatoryTask entities
+     */
     public List<MandatoryTask> getAllMandatoryTasks() {
         return mandatoryTaskRepository.findAll();
     }
