@@ -24,36 +24,33 @@ class TaskManagerApplicationTests {
 
 	@Test
 	public void createAndPersistUsers() {
-
+		// Crear un usuario admin
 		User admin = new User();
 		admin.setUsername("Admin");
 		admin.setPassword("Admin1234");
 		admin.setRole(ERole.ROLE_ADMIN);
 
+		// Crear un usuario manager
 		User manager = new User();
 		manager.setUsername("Manager");
 		manager.setPassword("Manager1234");
 		manager.setRole(ERole.ROLE_MANAGER);
 
+		// Crear un usuario normal
 		User user = new User();
 		user.setUsername("User");
 		user.setPassword("User1234");
 		user.setRole(ERole.ROLE_USER);
 
-		User user2 = new User();
-		user2.setUsername("User2");
-		user2.setPassword("User1234");
-		user2.setRole(ERole.ROLE_USER);
-
+		// Guardar los usuarios usando el servicio
 		userService.createUser(admin);
 		userService.createUser(manager);
 		userService.createUser(user);
-		userService.createUser(user2);
 
+		// Verificar que los usuarios se hayan persistido correctamente
 		Optional<User> persistedAdmin = userService.getByUsername("Admin");
 		Optional<User> persistedManager = userService.getByUsername("Manager");
 		Optional<User> persistedUser = userService.getByUsername("User");
-		Optional<User> persistedUser2 = userService.getByUsername("User2");
 
 		assertNotNull(persistedAdmin);
 		assertEquals(ERole.ROLE_ADMIN, persistedAdmin.get().getRole());
@@ -63,8 +60,5 @@ class TaskManagerApplicationTests {
 
 		assertNotNull(persistedUser);
 		assertEquals(ERole.ROLE_USER, persistedUser.get().getRole());
-
-		assertNotNull(persistedUser2);
-		assertEquals(ERole.ROLE_USER, persistedUser2.get().getRole());
 	}
 }

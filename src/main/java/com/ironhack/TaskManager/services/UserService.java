@@ -34,7 +34,7 @@ public class UserService implements UserDetailsService {
     }
 
     public Optional<User> getByUsername(String username) {
-        if (username == null || username.isEmpty()) {
+        if(username == null || username.isEmpty()) {
             throw new IllegalArgumentException("Username cannot be null or empty");
         }
         return userRepository.findByUsername(username);

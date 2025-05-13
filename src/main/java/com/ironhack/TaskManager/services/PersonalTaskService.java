@@ -3,6 +3,7 @@ package com.ironhack.TaskManager.services;
 import com.ironhack.TaskManager.exceptions.TaskNotFoundException;
 import com.ironhack.TaskManager.exceptions.UserNotFoundException;
 import com.ironhack.TaskManager.models.PersonalTask;
+import com.ironhack.TaskManager.models.Task;
 import com.ironhack.TaskManager.models.User;
 import com.ironhack.TaskManager.models.UserTask;
 import com.ironhack.TaskManager.repositories.PersonalTaskRepository;
@@ -11,7 +12,9 @@ import com.ironhack.TaskManager.repositories.UserTaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,7 +35,7 @@ public class PersonalTaskService extends TaskService {
     /**
      * Creates a new personal task for a specific user.
      *
-     * @param task     The personal task to be created.
+     * @param task The personal task to be created.
      * @param username The username of the user to whom the task will be assigned.
      * @return The UserTask object that links the user and the task.
      */
@@ -73,11 +76,28 @@ public class PersonalTaskService extends TaskService {
                 .collect(Collectors.toList()); // Collects the tasks into a list
     }
 
+//    public void validateTaskOwnership(Long taskId, String username) {
+//        // Verifica si existe una relación entre el usuario y la tarea en UserTask
+//        boolean exists = userTaskRepository.existsByTask_IdAndUser_Username(taskId, username);
+//        if (!exists) {
+//            throw new IllegalArgumentException ("You are not authorized to access this task.");
+//        }
+//    }
 
     public List<PersonalTask> getAllPersonalTask() {
         return personalTaskRepository.findAll();
     }
 
+//    public void completeTask(Long taskId) {
+//        PersonalTask task = personalTaskRepository.findById(taskId)
+//                .orElseThrow(() -> new TaskNotFoundException("Task not found"));
+//
+//        if(task.isFinished()) {
+//            throw new IllegalArgumentException("Task is already completed");
+//        }
+//        task.setFinished(true);
+//        personalTaskRepository.save(task);
+//    }
 
     public void completeTask(Long taskId, boolean finished) {
         PersonalTask task = personalTaskRepository.findById(taskId)
