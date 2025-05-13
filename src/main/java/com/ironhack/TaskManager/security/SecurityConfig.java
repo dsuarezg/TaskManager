@@ -20,6 +20,14 @@ public class SecurityConfig {
     @Autowired
     private JwtAuthenticationFilter jwtAuthFilter;
 
+    /**
+     * Configures the application's security filter chain, defining authentication and authorization rules for HTTP requests.
+     *
+     * Sets up stateless session management, disables CSRF protection, specifies endpoint access based on user roles, and integrates JWT authentication.
+     *
+     * @return the configured SecurityFilterChain
+     * @throws Exception if an error occurs during security configuration
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http

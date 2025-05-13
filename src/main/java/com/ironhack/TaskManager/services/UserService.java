@@ -24,15 +24,35 @@ public class UserService implements UserDetailsService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    /**
+     * Creates a new user with an encoded password and saves it to the repository.
+     *
+     * @param user the user entity to create; the password will be securely encoded before saving
+     * @return the saved user entity with the encoded password
+     */
     public User createUser(@Valid User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
+    /**
+     * Checks if the provided raw password matches the encoded password of the given user.
+     *
+     * @param user the user whose password is being verified
+     * @param password the raw password to validate
+     * @return true if the password matches; false otherwise
+     */
     public boolean passwordIsValid(User user, String password) {
         return passwordEncoder.matches(password, user.getPassword());
     }
 
+    /**
+     * Retrieves a user by username if the username is valid.
+     *
+     * @param username the username to search for; must not be null or empty
+     * @return an Optional containing the user if found, or empty if not found
+     * @throws IllegalArgumentException if the username is null or empty
+     */
     public Optional<User> getByUsername(String username) {
         if (username == null || username.isEmpty()) {
             throw new IllegalArgumentException("Username cannot be null or empty");
