@@ -61,10 +61,10 @@ public class MandatoryTaskService extends TaskService {
     }
 
     /**
-     * Returns all mandatory tasks assigned to the specified user.
+     * Retrieves all mandatory tasks assigned to a specific user.
      *
-     * @param username the username whose mandatory tasks are retrieved
-     * @return a list of MandatoryTask objects assigned to the user
+     * @param username The username of the user whose tasks are to be retrieved.
+     * @return A list of MandatoryTask objects assigned to the user.
      */
     public List<MandatoryTask> getMandatoryTasksByUsername(String username) {
         // Finds all UserTask objects associated with the given username
@@ -79,11 +79,6 @@ public class MandatoryTaskService extends TaskService {
     }
 
 
-    /**
-     * Retrieves all mandatory tasks from the database.
-     *
-     * @return a list of all MandatoryTask entities
-     */
     public List<MandatoryTask> getAllMandatoryTasks() {
         return mandatoryTaskRepository.findAll();
     }
