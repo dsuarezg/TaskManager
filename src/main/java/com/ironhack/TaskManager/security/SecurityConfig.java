@@ -20,34 +20,49 @@ public class SecurityConfig {
     @Autowired
     private JwtAuthenticationFilter jwtAuthFilter;
 
-    /**
-     * Builds and configures the application's HTTP security filter chain.
-     *
-     * Sets up stateless session management, disables CSRF protection, defines endpoint-specific authorization rules, and integrates JWT authentication filtering.
-     *
-     * @param http the {@link HttpSecurity} to configure
-     * @return the configured {@link SecurityFilterChain}
-     * @throws Exception if an error occurs during security configuration
-     */
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(AbstractHttpConfigurer::disable) // For development. In production, configure appropriately
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Server doesn't store session state, because it's a REST API
+                .csrf(AbstractHttpConfigurer::disable) // For development. In production, configure appropriately
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Server doesn't store session state, because it's a REST API
+                /*.authorizeHttpRequests(auth -> auth
+                        // Public routes
+                        .requestMatchers("/api/auth/login").permitAll()
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                        // Routes protected by role
+                        .requestMatchers("/api/user/**").hasRole("ADMIN")
+                        //.requestMatchers("/api/task/**").hasAnyRole("ADMIN")
+                        //Protected by User
+                        //.requestMatchers("/api/task/**").authenticated()
+                        .requestMatchers("/api/task/mandatory/**").hasAnyRole("ADMIN", "MANAGER")
+                        .requestMatchers("/api/task/personal/**").hasAnyRole("ADMIN", "USER")
+                        // All other routes require authentication
+                        .anyRequest().authenticated()
+                )*/
+                .authorizeHttpRequests(auth -> auth
+                                .requestMatchers("/api/auth/login").permitAll()
+                                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
 
-            .authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/api/auth/login").permitAll()
-                    .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                    .requestMatchers("/api/user/**").hasRole("ADMIN")
-                    .requestMatchers("/api/task/personal/**").hasAnyRole("ADMIN", "USER")
-                    .requestMatchers("/api/task/mandatory/**").hasAnyRole("ADMIN", "USER", "MANAGER")
-                    .requestMatchers("/api/task/**").hasAnyRole("ADMIN", "USER")
-                    .anyRequest().authenticated()
+// Solo ADMIN puede gestionar usuarios
+                                .requestMatchers("/api/user/**").hasRole("ADMIN")
 
-            )
+// Personal Tasks
+                                .requestMatchers("/api/task/personal/**").hasAnyRole("ADMIN", "USER")
 
-            // Add filter before UsernamePasswordAuthenticationFilter
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+// Mandatory Tasks
+                                .requestMatchers("/api/task/mandatory/**").hasAnyRole("ADMIN", "USER", "MANAGER")
+
+// Tareas generales (/task/** para completar/borrar tareas)
+                                .requestMatchers("/api/task/**").hasAnyRole("ADMIN", "USER")
+
+// Cualquier otra request
+                                .anyRequest().authenticated()
+
+                )
+
+                // Add our filter before UsernamePasswordAuthenticationFilter
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

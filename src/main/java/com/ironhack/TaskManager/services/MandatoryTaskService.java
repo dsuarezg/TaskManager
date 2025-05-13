@@ -2,6 +2,7 @@ package com.ironhack.TaskManager.services;
 
 import com.ironhack.TaskManager.exceptions.UserNotFoundException;
 import com.ironhack.TaskManager.models.MandatoryTask;
+import com.ironhack.TaskManager.models.PersonalTask;
 import com.ironhack.TaskManager.models.User;
 import com.ironhack.TaskManager.models.UserTask;
 import com.ironhack.TaskManager.repositories.MandatoryTaskRepository;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,10 +34,9 @@ public class MandatoryTaskService extends TaskService {
     /**
      * Creates and assigns a new mandatory task to a user, linking them via a UserTask entity.
      *
-     * @param task the mandatory task to create and assign
-     * @param username the username of the user to assign the task to
-     * @return the UserTask entity linking the user and the created mandatory task
-     * @throws UserNotFoundException if no user with the given username exists
+     * @param task The mandatory task to be created.
+     * @param username The username of the user to whom the task will be assigned.
+     * @return The UserTask object that links the user and the task.
      */
     public UserTask createMandatoryTask(MandatoryTask task, String username) {
 
@@ -62,10 +63,10 @@ public class MandatoryTaskService extends TaskService {
     }
 
     /**
-     * Retrieves all mandatory tasks assigned to a user by their username.
+     * Retrieves all mandatory tasks assigned to a specific user.
      *
-     * @param username the username whose mandatory tasks are to be retrieved
-     * @return a list of MandatoryTask entities assigned to the specified user
+     * @param username The username of the user whose tasks are to be retrieved.
+     * @return A list of MandatoryTask objects assigned to the user.
      */
     public List<MandatoryTask> getMandatoryTasksByUsername(String username) {
         // Finds all UserTask objects associated with the given username
@@ -79,15 +80,19 @@ public class MandatoryTaskService extends TaskService {
                 .collect(Collectors.toList()); // Collects the tasks into a list
     }
 
+//    public void validateTaskOwnership(Long taskId, String username) {
+//        // Verifica si existe una relación entre el usuario y la tarea en UserTask
+//        boolean exists = userTaskRepository.existsByTask_IdAndUser_Username(taskId, username);
+//        if (!exists) {
+//            throw new IllegalArgumentException ("You are not authorized to access this task.");
+//        }
+//    }
 
-    /**
-     * Returns all mandatory tasks stored in the database.
-     *
-     * @return a list of all MandatoryTask entities
-     */
+
     public List<MandatoryTask> getAllMandatoryTasks() {
         return mandatoryTaskRepository.findAll();
     }
+
 
 
 }

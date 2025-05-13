@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -15,6 +16,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * JWT Authentication Filter that processes incoming HTTP requests to validate and authenticate JWT tokens.
@@ -27,15 +29,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private JwtService jwtService; // Service to handle JWT-related operations.
 
     /**
-     * Processes incoming HTTP requests to authenticate users based on a JWT token in the "Authorization" header.
-     *
-     * If a valid JWT is found, sets the authentication in the Spring Security context; otherwise, allows the request to proceed without authentication.
-     *
-     * @param request the HTTP request to authenticate
-     * @param response the HTTP response
-     * @param filterChain the filter chain for further processing
-     * @throws ServletException if an error occurs during filtering
-     * @throws IOException if an I/O error occurs during filtering
+     * Main method of the filter that intercepts each HTTP request.
+     * @param request Incoming HTTP request.
+     * @param response Outgoing HTTP response.
      */
     @Override
     protected void doFilterInternal(HttpServletRequest request,

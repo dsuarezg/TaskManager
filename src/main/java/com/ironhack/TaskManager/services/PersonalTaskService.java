@@ -3,6 +3,7 @@ package com.ironhack.TaskManager.services;
 import com.ironhack.TaskManager.exceptions.TaskNotFoundException;
 import com.ironhack.TaskManager.exceptions.UserNotFoundException;
 import com.ironhack.TaskManager.models.PersonalTask;
+import com.ironhack.TaskManager.models.Task;
 import com.ironhack.TaskManager.models.User;
 import com.ironhack.TaskManager.models.UserTask;
 import com.ironhack.TaskManager.repositories.PersonalTaskRepository;
@@ -11,7 +12,9 @@ import com.ironhack.TaskManager.repositories.UserTaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,13 +35,9 @@ public class PersonalTaskService extends TaskService {
     /**
      * Creates and assigns a new personal task to a user.
      *
-     * Associates the provided personal task with the user identified by the given username,
-     * persists both the task and the user-task relationship, and returns the resulting UserTask.
-     *
-     * @param task the personal task to assign
-     * @param username the username of the user to assign the task to
-     * @return the UserTask entity linking the user and the new personal task
-     * @throws UserNotFoundException if the specified user does not exist
+     * @param task The personal task to be created.
+     * @param username The username of the user to whom the task will be assigned.
+     * @return The UserTask object that links the user and the task.
      */
     public UserTask createPersonalTask(PersonalTask task, String username) {
 
@@ -60,10 +59,10 @@ public class PersonalTaskService extends TaskService {
     }
 
     /**
-     * Retrieves all personal tasks assigned to the specified user.
+     * Retrieves all personal tasks assigned to a specific user.
      *
-     * @param username the username whose personal tasks are to be retrieved
-     * @return a list of PersonalTask entities associated with the user
+     * @param username The username of the user whose tasks are to be retrieved.
+     * @return A list of PersonalTask objects assigned to the user.
      */
     public List<PersonalTask> getPersonalTasksByUsername(String username) {
         // Finds all UserTask objects associated with the given username
@@ -77,24 +76,31 @@ public class PersonalTaskService extends TaskService {
                 .collect(Collectors.toList()); // Collects the tasks into a list
     }
 
+//    public void validateTaskOwnership(Long taskId, String username) {
+//        // Verifica si existe una relación entre el usuario y la tarea en UserTask
+//        boolean exists = userTaskRepository.existsByTask_IdAndUser_Username(taskId, username);
+//        if (!exists) {
+//            throw new IllegalArgumentException ("You are not authorized to access this task.");
+//        }
+//    }
 
-    /**
-     * Returns a list of all personal tasks stored in the repository.
-     *
-     * @return a list of all PersonalTask entities
-     */
+
     public List<PersonalTask> getAllPersonalTask() {
         return personalTaskRepository.findAll();
     }
 
+//    public void completeTask(Long taskId) {
+//        PersonalTask task = personalTaskRepository.findById(taskId)
+//                .orElseThrow(() -> new TaskNotFoundException("Task not found"));
+//
+//        if(task.isFinished()) {
+//            throw new IllegalArgumentException("Task is already completed");
+//        }
+//        task.setFinished(true);
+//        personalTaskRepository.save(task);
+//    }
 
-    /**
-     * Sets the finished status of a personal task identified by its ID.
-     *
-     * @param taskId the ID of the personal task to update
-     * @param finished true to mark the task as finished, false to mark as unfinished
-     * @throws TaskNotFoundException if no personal task with the specified ID exists
-     */
+
     public void completeTask(Long taskId, boolean finished) {
         PersonalTask task = personalTaskRepository.findById(taskId)
                 .orElseThrow(() -> new TaskNotFoundException("Task not found"));

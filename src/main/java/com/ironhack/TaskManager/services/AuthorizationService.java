@@ -12,15 +12,14 @@ public class AuthorizationService {
     @Autowired
     private MandatoryTaskService mandatoryTaskService;
 
-    /**
-     * Determines whether the provided authentication includes the specified role.
-     *
-     * @param auth the authentication object whose authorities are checked
-     * @param role the role name to search for among the authentication's authorities
-     * @return true if the authentication contains the specified role; false otherwise
-     */
+
     public boolean hasRole(Authentication auth, String role) {
         return auth.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals(role));
     }
 
+    public void validateOwnershipOrAdmin(Authentication auth, Long taskId) throws AccessDeniedException {
+        if (!hasRole(auth, "ROLE_ADMIN") && !mandatoryTaskService.verifyByTaskIdAndUsername(taskId, auth.getName())) {
+            throw new AccessDeniedException("You are not authorized to perform this action");
+        }
+    }
 }

@@ -35,26 +35,14 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
 
-    /**
-     * Checks if the provided raw password matches the encoded password of the specified user.
-     *
-     * @param user the user whose password is being checked
-     * @param password the raw password to validate
-     * @return true if the raw password matches the user's encoded password; false otherwise
-     */
+
     public boolean passwordIsValid(User user, String password) {
         return passwordEncoder.matches(password, user.getPassword());
     }
 
-    /**
-     * Retrieves a user by their username.
-     *
-     * @param username the username to search for; must not be null or empty
-     * @return an Optional containing the user if found, or empty if not found
-     * @throws IllegalArgumentException if the username is null or empty
-     */
+
     public Optional<User> getByUsername(String username) {
-        if (username == null || username.isEmpty()) {
+        if(username == null || username.isEmpty()) {
             throw new IllegalArgumentException("Username cannot be null or empty");
         }
         return userRepository.findByUsername(username);
