@@ -47,21 +47,21 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("Contraseña encriptada correctamente")
+    @DisplayName("Password encryption success")
     public void testPasswordEncryption() {
         assertNotNull(user);
         assertTrue(passwordEncoder.matches("Test1234", user.getPassword()));
     }
 
     @Test
-    @DisplayName("Validación de contraseña exitosa")
+    @DisplayName("Password encryption validation success")
     public void testPasswordValidationSuccess() {
         assertNotNull(user);
         assertTrue(userService.passwordIsValid(user, "Test1234"));
     }
 
     @Test
-    @DisplayName("Validación de contraseña fallida")
+    @DisplayName("Password encryption validation failure")
     public void testPasswordValidationFailure() {
         assertNotNull(user);
         assertFalse(userService.passwordIsValid(user, "WrongPassword"));
