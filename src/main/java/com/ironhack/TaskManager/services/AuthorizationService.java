@@ -16,9 +16,4 @@ public class AuthorizationService {
         return auth.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals(role));
     }
 
-    public void validateOwnershipOrAdmin(Authentication auth, Long taskId) throws AccessDeniedException {
-        if (!hasRole(auth, "ROLE_ADMIN") && !mandatoryTaskService.verifyByTaskIdAndUsername(taskId, auth.getName())) {
-            throw new AccessDeniedException("You are not authorized to perform this action");
-        }
-    }
 }
